@@ -50,6 +50,6 @@ export default class Game extends Phaser.Scene {
     const layerAbove = map.createLayer("above", tileSet);
     layerAbove.setCollisionByProperty({ collides: true });
 
-    // do part 2, characters next
+    // do part 2, characters next!
   }
 }
