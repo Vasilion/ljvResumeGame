@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Game from "./game";
+import Preloader from "./preloader";
 export const gameConfig = {
   type: Phaser.AUTO,
   parent: "app",
@@ -9,8 +10,9 @@ export const gameConfig = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
+      debug: true,
     },
   },
-  scene: [Game],
+  scene: [Preloader, Game],
   scale: {},
 };
