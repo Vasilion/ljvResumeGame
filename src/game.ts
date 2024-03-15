@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import WordBox from "./scenes/wordBox";
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -7,11 +8,11 @@ export default class Game extends Phaser.Scene {
   constructor() {
     super("game");
   }
-  preload() {
+  preload(): void {
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
-  create() {
+  create(): void {
     // Set up game objects and logic here
     const map = this.make.tilemap({ key: "level" });
     const tileSet = [
@@ -66,13 +67,15 @@ export default class Game extends Phaser.Scene {
       layerAbove,
       layerBase,
     ]);
-    // this.player.setCollideWorldBounds();
+
+    //Launch UI Scenes
+    this.createTextBox(
+      "Hi, Welcome to Luke Vasilion's interactive resume. Pick up all 3 power-ups to unlock and defeat the 'Interview' boss."
+    );
   }
 
   update(time: number, delta: number): void {
     const speed = 300;
-    this.scene.launch("word-box");
-    this.scene.bringToTop("word-box");
     if (!this.cursors || !this.player) {
       return;
     }
@@ -108,7 +111,7 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 1, 1, 20, -150);
   }
 
-  private attack() {
+  private attack(): void {
     if (!this.isAttacking) {
       this.isAttacking = true;
       if (this.cursors.down?.isDown) {
@@ -126,9 +129,13 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  private playMoveAnimation() {
+  private playMoveAnimation(): void {
     if (!this.isAttacking) {
       this.player.anims.play("Run", true);
     }
+  }
+
+  private createTextBox(msg: string): void {
+    this.scene.launch("wordBox", { text: msg });
   }
 }
