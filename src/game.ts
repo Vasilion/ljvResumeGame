@@ -32,12 +32,14 @@ export default class Game extends Phaser.Scene {
     const layerWalls = map.createLayer("walls", tileSet);
     layerAbove.setCollisionByProperty({ collides: true });
 
-    const debugGraphics = this.add.graphics().setAlpha(0.7);
-    layerWalls.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 243, 48),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    });
+    // Layer Debug
+
+    // const debugGraphics = this.add.graphics().setAlpha(0.7);
+    // layerWalls.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 243, 48),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // });
 
     this.anims.createFromAseprite("player");
     this.player = this.physics.add
