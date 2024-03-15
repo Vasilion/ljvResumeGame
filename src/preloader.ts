@@ -13,6 +13,15 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles4", "/Terrain/Water/Foam/Foam.png");
     this.load.image("tiles5", "/Terrain/Water/Water.png");
     this.load.image("tiles6", "/Terrain/Bridge/Bridge_All.png");
+    this.load.image(
+      "tiles7",
+      "/Factions/Knights/Buildings/Castle/Castle_Blue.png"
+    );
+    this.load.image("tiles8", "/Factions/Knights/Troops/Dead/Dead.png");
+    this.load.image(
+      "tiles9",
+      "/Factions/Goblins/Buildings/Wood_Tower/Wood_Tower_Red.png"
+    );
 
     this.load.aseprite(
       "player",

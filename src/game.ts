@@ -21,17 +21,25 @@ export default class Game extends Phaser.Scene {
       map.addTilesetImage("water-Foam", "tiles4"),
       map.addTilesetImage("water", "tiles5"),
       map.addTilesetImage("Bridges", "tiles6"),
+      map.addTilesetImage("Castle_Blue", "tiles7"),
+      map.addTilesetImage("Dead", "tiles8"),
+      map.addTilesetImage("Goblin_House", "tiles9"),
     ];
 
     const layerUnder = map.createLayer("under", tileSet);
+    layerUnder.setCollisionByProperty({ collides: true });
 
     const layerShadow = map.createLayer("shadows", tileSet);
+    layerShadow.setCollisionByProperty({ collides: true });
 
     const layerBase = map.createLayer("base", tileSet);
+    layerBase.setCollisionByProperty({ collides: true });
 
     const layerAbove = map.createLayer("above", tileSet);
+    layerAbove.setCollisionByProperty({ collides: true });
 
     const layerWalls = map.createLayer("walls", tileSet);
+    layerWalls.setCollisionByProperty({ collides: true });
 
     map.setCollisionByProperty({ collides: true });
 
@@ -47,17 +55,24 @@ export default class Game extends Phaser.Scene {
     // Build Player
     this.anims.createFromAseprite("player");
     this.player = this.physics.add
-      .sprite(980, 820, "player")
+      .sprite(980, 1820, "player")
       .play({ key: "Idle", repeat: -1 });
     // set hit box to feet for now, until i learn better way to deal with collisions.
     this.player.setSize(this.player.width * 0.05, this.player.height * 0.1);
 
-    this.physics.add.collider(this.player, [layerWalls, layerUnder]);
-    this.player.setCollideWorldBounds();
+    this.physics.add.collider(this.player, [
+      layerWalls,
+      layerUnder,
+      layerAbove,
+      layerBase,
+    ]);
+    // this.player.setCollideWorldBounds();
   }
 
   update(time: number, delta: number): void {
     const speed = 300;
+    this.scene.launch("word-box");
+    this.scene.bringToTop("word-box");
     if (!this.cursors || !this.player) {
       return;
     }
