@@ -83,6 +83,11 @@ export default class Game extends Phaser.Scene {
       this.player.setVelocity(0, 0);
     }
 
+    // Attack
+    if (this.cursors.space?.isDown) {
+      this.player.anims.play("Attack_2", true);
+    }
+
     // Camera
     this.cameras.main.startFollow(this.player, true, 1, 1, 20, -150);
   }
