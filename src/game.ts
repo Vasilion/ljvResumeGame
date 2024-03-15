@@ -2,6 +2,7 @@ import Phaser from "phaser";
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private player!: Phaser.Physics.Arcade.Sprite;
+  private isAttacking: boolean;
 
   constructor() {
     super("game");
@@ -63,20 +64,20 @@ export default class Game extends Phaser.Scene {
 
     // Movement
     if (this.cursors.left?.isDown) {
-      this.player.anims.play("Run", true);
+      this.playMoveAnimation();
       this.player.setVelocity(-speed, 0);
       this.player.scaleX = -1;
       this.player.setOffset(115, 110);
     } else if (this.cursors.right?.isDown) {
-      this.player.anims.play("Run", true);
+      this.playMoveAnimation();
       this.player.setVelocity(speed, 0);
       this.player.scaleX = 1;
       this.player.setOffset(105, 110);
     } else if (this.cursors.up?.isDown) {
-      this.player.anims.play("Run", true);
+      this.playMoveAnimation();
       this.player.setVelocity(0, -speed);
     } else if (this.cursors.down?.isDown) {
-      this.player.anims.play("Run", true);
+      this.playMoveAnimation();
       this.player.setVelocity(0, speed);
     } else {
       this.player.anims.chain("Idle");
@@ -85,10 +86,34 @@ export default class Game extends Phaser.Scene {
 
     // Attack
     if (this.cursors.space?.isDown) {
-      this.player.anims.play("Attack_2", true);
+      this.attack();
     }
 
     // Camera
     this.cameras.main.startFollow(this.player, true, 1, 1, 20, -150);
+  }
+
+  private attack() {
+    if (!this.isAttacking) {
+      this.isAttacking = true;
+      if (this.cursors.down?.isDown) {
+        this.player.anims.play({ key: "Attack_3", frameRate: 30 });
+      } else if (this.cursors.up?.isDown) {
+        this.player.anims.play({ key: "Attack_5", frameRate: 30 });
+      } else {
+        this.player.anims.play({ key: "Attack_2", frameRate: 30 });
+      }
+
+      this.player.once("animationcomplete", () => {
+        this.isAttacking = false;
+        this.playMoveAnimation();
+      });
+    }
+  }
+
+  private playMoveAnimation() {
+    if (!this.isAttacking) {
+      this.player.anims.play("Run", true);
+    }
   }
 }
