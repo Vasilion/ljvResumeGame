@@ -6,9 +6,9 @@ export default class WordBox extends Phaser.Scene {
 
   create(data): void {
     const graphics = this.add.graphics();
-    const rectX = 430; // Adjust X position as needed
+    const rectX = 0; // Adjust X position as needed
     const rectY = window.innerHeight / 2; // Adjust Y position as needed
-    const rectWidth = window.innerWidth / 1.5; // Width of the background rectangle
+    const rectWidth = window.innerWidth; // Width of the background rectangle
     const rectHeight = 100;
 
     // Set the fill style for the background rectangle
@@ -30,7 +30,7 @@ export default class WordBox extends Phaser.Scene {
       }
     );
     this.time.addEvent({
-      delay: 20000,
+      delay: 7000,
       callback: this.endScene,
       callbackScope: this,
     });

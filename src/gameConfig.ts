@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import Game from "./game";
 import Preloader from "./preloader";
 import WordBox from "./scenes/wordBox";
+import WorkInterior from "./scenes/workInterior";
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: "app",
@@ -17,6 +18,6 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   dom: {
     createContainer: true,
   },
-  scene: [Preloader, Game, WordBox],
+  scene: [Preloader, Game, WordBox, WorkInterior],
   scale: {},
 };
