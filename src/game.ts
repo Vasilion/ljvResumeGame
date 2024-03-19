@@ -1,8 +1,8 @@
 import Phaser from "phaser";
+import Player from "./player";
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private player!: Phaser.Physics.Arcade.Sprite;
-  private isAttacking: boolean;
+  private player!: Player;
 
   constructor() {
     super("game");
@@ -25,35 +25,12 @@ export default class Game extends Phaser.Scene {
     if (!this.cursors || !this.player) {
       return;
     }
-    this.setupAnimationsAndMovement();
-  }
-
-  private attack(): void {
-    if (!this.isAttacking) {
-      this.isAttacking = true;
-      if (this.cursors.down?.isDown) {
-        this.player.anims.play({ key: "Attack_3", frameRate: 30 });
-      } else if (this.cursors.up?.isDown) {
-        this.player.anims.play({ key: "Attack_5", frameRate: 30 });
-      } else {
-        this.player.anims.play({ key: "Attack_2", frameRate: 30 });
-      }
-
-      this.player.once("animationcomplete", () => {
-        this.isAttacking = false;
-        this.playMoveAnimation();
-      });
-    }
-  }
-
-  private playMoveAnimation(): void {
-    if (!this.isAttacking) {
-      this.player.anims.play("Run", true);
-    }
+    this.player.setupAnimationsAndMovement();
   }
 
   private createOpeningTextBox(msg: string): void {
-    this.scene.launch("wordBox", { text: msg });
+    this.player.setVelocity(0, 0);
+    this.scene.launch("wordBox", { text: msg, time: 7000 });
     this.time.addEvent({
       delay: 7000,
       callback: this.standBy,
@@ -81,6 +58,7 @@ export default class Game extends Phaser.Scene {
       map.addTilesetImage("Castle_Blue", "tiles7"),
       map.addTilesetImage("Dead", "tiles8"),
       map.addTilesetImage("Goblin_House", "tiles9"),
+      map.addTilesetImage("boss_sign", "boss_sign"),
     ];
 
     const layerUnder = map.createLayer("under", tileSet);
@@ -101,8 +79,14 @@ export default class Game extends Phaser.Scene {
     const layertrigger = map.createLayer("trigger", tileSet);
     layertrigger.setCollisionByProperty({ collides: true });
 
+    const layerbossWarn = map.createLayer("bossWarn", tileSet);
+    layerbossWarn.setCollisionByProperty({ collides: true });
+    layerbossWarn.setInteractive();
+
+    this.interactWithBossSign(layerbossWarn, map);
+
     // This has to happen here due to positioning
-    this.buildPlayer();
+    this.player = new Player(this, 980, 1820);
 
     // Wall Collisions
     this.physics.add.collider(this.player, [
@@ -110,6 +94,7 @@ export default class Game extends Phaser.Scene {
       layerUnder,
       layerAbove,
       layerBase,
+      layerbossWarn,
     ]);
 
     // Trigger Collisions
@@ -122,42 +107,37 @@ export default class Game extends Phaser.Scene {
     );
   }
 
-  private buildPlayer(): void {
-    this.anims.createFromAseprite("player");
-    this.player = this.physics.add
-      .sprite(980, 1820, "player")
-      .play({ key: "Idle", repeat: -1 });
-    // set hit box to feet for now, until i learn better way to deal with collisions.
-    this.player.setSize(this.player.width * 0.05, this.player.height * 0.1);
-  }
+  private interactWithBossSign(
+    tileMapLayer: Phaser.Tilemaps.TilemapLayer,
+    map: Phaser.Tilemaps.Tilemap
+  ): void {
+    this.input.keyboard.on("keydown-E", () => {
+      // Convert player's position to tile coordinates
+      const playerTileX = tileMapLayer.worldToTileX(this.player.x);
+      const playerTileY = tileMapLayer.worldToTileY(this.player.y);
 
-  private setupAnimationsAndMovement(): void {
-    const speed = 300;
-    // Movement
-    if (this.cursors.left?.isDown) {
-      this.playMoveAnimation();
-      this.player.setVelocity(-speed, 0);
-      this.player.scaleX = -1;
-      this.player.setOffset(115, 110);
-    } else if (this.cursors.right?.isDown) {
-      this.playMoveAnimation();
-      this.player.setVelocity(speed, 0);
-      this.player.scaleX = 1;
-      this.player.setOffset(105, 110);
-    } else if (this.cursors.up?.isDown) {
-      this.playMoveAnimation();
-      this.player.setVelocity(0, -speed);
-    } else if (this.cursors.down?.isDown) {
-      this.playMoveAnimation();
-      this.player.setVelocity(0, speed);
-    } else {
-      this.player.anims.chain("Idle");
-      this.player.setVelocity(0, 0);
-    }
+      // Get the tile at the player's position
+      const clickedTile = map.getTileAt(
+        playerTileX,
+        playerTileY,
+        true,
+        tileMapLayer
+      );
 
-    // Attack
-    if (this.cursors.space?.isDown) {
-      this.attack();
-    }
+      // Check if the clicked tile exists and is clickable
+      if (clickedTile && clickedTile.properties.clickable) {
+        // Perform actions based on the clicked tile
+        this.cursors = null;
+        this.scene.launch("wordBox", {
+          text: "The Interview Awaits Within.",
+          time: 3000,
+        });
+        this.time.addEvent({
+          delay: 3000,
+          callback: this.standBy,
+          callbackScope: this,
+        });
+      }
+    });
   }
 }

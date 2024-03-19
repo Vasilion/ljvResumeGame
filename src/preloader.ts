@@ -23,6 +23,7 @@ export default class Preloader extends Phaser.Scene {
       "tiles9",
       "/Factions/Goblins/Buildings/Wood_Tower/Wood_Tower_Red.png"
     );
+    this.load.image("boss_sign", "/Deco/16.png");
 
     this.load.aseprite(
       "player",

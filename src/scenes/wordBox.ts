@@ -30,7 +30,7 @@ export default class WordBox extends Phaser.Scene {
       }
     );
     this.time.addEvent({
-      delay: 7000,
+      delay: data.time,
       callback: this.endScene,
       callbackScope: this,
     });
