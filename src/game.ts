@@ -3,11 +3,20 @@ import Player from "./player";
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private player!: Player;
+  private isFirstLoad: boolean;
+  private playerX: number;
+  private playerY: number;
 
   constructor() {
     super("game");
   }
   preload(): void {}
+
+  init(data) {
+    this.isFirstLoad = data.isFirstLoad;
+    this.playerX = data.playerX;
+    this.playerY = data.playerY;
+  }
 
   create(): void {
     // Set up game objects and logic here
@@ -29,13 +38,15 @@ export default class Game extends Phaser.Scene {
   }
 
   private createOpeningTextBox(msg: string): void {
-    this.player.setVelocity(0, 0);
-    this.scene.launch("wordBox", { text: msg, time: 7000 });
-    this.time.addEvent({
-      delay: 7000,
-      callback: this.standBy,
-      callbackScope: this,
-    });
+    if (this.isFirstLoad) {
+      this.player.setVelocity(0, 0);
+      this.scene.launch("wordBox", { text: msg, time: 7000 });
+      this.time.addEvent({
+        delay: 7000,
+        callback: this.standBy,
+        callbackScope: this,
+      });
+    }
   }
 
   private loadWorkInteriorScene(): void {
@@ -86,7 +97,7 @@ export default class Game extends Phaser.Scene {
     this.interactWithBossSign(layerbossWarn, map);
 
     // This has to happen here due to positioning
-    this.player = new Player(this, 980, 1820);
+    this.player = new Player(this, this.playerX, this.playerY);
 
     // Wall Collisions
     this.physics.add.collider(this.player, [

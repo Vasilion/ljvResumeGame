@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-
 export default class Preloader extends Phaser.Scene {
   constructor() {
     super("preloader");
@@ -24,6 +23,9 @@ export default class Preloader extends Phaser.Scene {
       "/Factions/Goblins/Buildings/Wood_Tower/Wood_Tower_Red.png"
     );
     this.load.image("boss_sign", "/Deco/16.png");
+    this.load.image("tiles10", "/Interrior/Floors_furnitures2x.png");
+    this.load.image("tiles11", "/Texture/TX Props2x.png");
+    this.load.image("tiles12", "/Resources/Resources/G_idle.png");
 
     this.load.aseprite(
       "player",
@@ -32,6 +34,10 @@ export default class Preloader extends Phaser.Scene {
     );
   }
   create() {
-    this.scene.start("game");
+    this.scene.start("game", {
+      isFirstLoad: true,
+      playerX: 980,
+      playerY: 1820,
+    });
   }
 }
