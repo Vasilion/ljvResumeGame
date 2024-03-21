@@ -5,8 +5,8 @@ export default class Preloader extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("level", "src/Levels/level01.json");
-    this.load.tilemapTiledJSON("workInterior", "src/Levels/workInterior.json");
+    this.load.tilemapTiledJSON("level", "/Levels/level01.json");
+    this.load.tilemapTiledJSON("workInterior", "/Levels/workInterior.json");
     this.load.image("tiles", "/Terrain/Ground/Tilemap_Elevation.png");
     this.load.image("tiles2", "/Terrain/Ground/Tilemap_Flat.png");
     this.load.image("tiles3", "/Terrain/Ground/Shadows.png");
@@ -25,7 +25,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("boss_sign", "/Deco/16.png");
     this.load.image("tiles10", "/Interrior/Floors_furnitures2x.png");
     this.load.image("tiles11", "/Texture/TX Props2x.png");
-    this.load.image("tiles12", "/Resources/Resources/G_idle.png");
+    this.load.image("tiles12", "/Resources/Resources/G_Idle.png");
 
     this.load.aseprite(
       "player",
